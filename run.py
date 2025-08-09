@@ -184,14 +184,9 @@ def remove_player_by_sid(sid: str):
     if not room:
         return
     room['players'].pop(player_key, None)
-    # If room empty, delete it automatically (and metadata)
+    # If room becomes empty, keep it persisted in DB; clear only from in-memory cache
     if not room['players']:
         rooms.pop(room_code, None)
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute("DELETE FROM rooms WHERE code=?", (room_code,))
-        conn.commit()
-        conn.close()
 
 
 def add_bot_to_room(room_code: str):
@@ -401,9 +396,7 @@ def guest_login():
     # Prevent collision with registered users
     guest_username = f"guest_{name}_{random.randint(1000,9999)}"
     session['username'] = guest_username
-    # Auto create room if not exists? For safety, require existing room
-    if code not in rooms:
-        return redirect(url_for('index'))
+    # Allow redirect to room even if it's not in memory; route will reconstruct from DB
     return redirect(url_for('room', code=code))
 
 

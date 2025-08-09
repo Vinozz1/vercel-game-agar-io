@@ -4,6 +4,29 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+.venv/
+venv/
+env/
+.env
+
+# macOS
+.DS_Store
+
+# Databases / local files
+data.db
+
+# Node
+node_modules/
+*.log
+
+# Vercel
+.vercel/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 
 # Env
 env/
