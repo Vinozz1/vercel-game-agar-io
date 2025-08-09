@@ -12,7 +12,13 @@
   </head>
   <body class="page">
     <div class="container">
-      <h1 class="title">Agar.io Simplegame (Vercel)</h1>
+      <h1 class="title">Multiplayer Agar.io</h1>
+
+      <div class="row gap">
+        <a class="btn" href="/login.html">Login</a>
+        <a class="btn" href="/signup.html">Sign Up</a>
+      </div>
+
       <div class="grid two">
         <div class="card">
           <h2>Buat Room</h2>
@@ -25,19 +31,63 @@
             <button class="btn" type="submit" style="margin-top:10px;">Buat</button>
           </form>
         </div>
+
         <div class="card">
-          <h2>Gabung Room</h2>
+          <h2>Masuk Room</h2>
           <form id="joinRoom">
-            <label>Nama kamu</label>
-            <input id="name2" type="text" maxlength="16" required />
             <label>Kode Room</label>
             <input id="code" type="text" maxlength="12" placeholder="ABC123" required />
-            <button class="btn" type="submit" style="margin-top:10px;">Join</button>
+            <button class="btn" type="submit" style="margin-top:10px;">Masuk</button>
           </form>
         </div>
       </div>
+
+      <div class="card">
+        <h2>Main sebagai Tamu</h2>
+        <form id="guestForm">
+          <div class="grid two">
+            <div>
+              <label for="guestName">Nama</label>
+              <input id="guestName" placeholder="Nama kamu" maxlength="16" required />
+            </div>
+            <div>
+              <label for="guestRoom">Kode Room</label>
+              <input id="guestRoom" placeholder="ABC123" maxlength="12" required />
+            </div>
+          </div>
+          <button class="btn" type="submit" style="margin-top:10px;">Masuk sebagai Tamu</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Room Aktif (ringkas)</h2>
+        <div id="roomList" class="room-list"></div>
+      </div>
     </div>
+
     <script>
+      async function loadRooms(){
+        try{
+          const res = await fetch('/api/rooms');
+          const data = await res.json();
+          const list = document.getElementById('roomList');
+          list.innerHTML = '';
+          (data.rooms||[]).forEach(r=>{
+            const wrap = document.createElement('div');
+            wrap.className = 'room-item';
+            wrap.innerHTML = `
+              <div>
+                <div><strong>${r.code}</strong></div>
+                <div>Owner: ${r.created_by} ${r.vs_bot ? '• + BOT' : ''}</div>
+              </div>
+              <a class="btn" href="/room/${r.code}">Join</a>
+            `;
+            list.appendChild(wrap);
+          });
+        }catch{}
+      }
+      loadRooms();
+
       const createForm = document.getElementById('createRoom');
       createForm.addEventListener('submit', async (e)=>{
         e.preventDefault();
@@ -49,11 +99,20 @@
         const code = data.code;
         window.location.href = `/room/${code}?name=${encodeURIComponent(name)}&vsbot=${vsbot?'1':'0'}`;
       });
+
       const joinForm = document.getElementById('joinRoom');
       joinForm.addEventListener('submit',(e)=>{
         e.preventDefault();
-        const name = document.getElementById('name2').value.trim();
         const code = document.getElementById('code').value.trim().toUpperCase();
+        const name = localStorage.getItem('username') || 'Guest';
+        window.location.href = `/room/${code}?name=${encodeURIComponent(name)}`;
+      });
+
+      const guestForm = document.getElementById('guestForm');
+      guestForm.addEventListener('submit',(e)=>{
+        e.preventDefault();
+        const name = document.getElementById('guestName').value.trim();
+        const code = document.getElementById('guestRoom').value.trim().toUpperCase();
         window.location.href = `/room/${code}?name=${encodeURIComponent(name)}`;
       });
     </script>
