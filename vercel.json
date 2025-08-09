@@ -1,15 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/edge" },
-    { "src": "public/**", "use": "@vercel/static" },
-    { "src": "static/**", "use": "@vercel/static" },
-    { "src": "templates/**", "use": "@vercel/static" }
-  ],
+  "functions": {
+    "api/ws.js": { "runtime": "edge" },
+    "api/*.js": { "runtime": "edge" }
+  },
   "routes": [
-    { "src": "/api/ws", "dest": "/api/ws.js" },
+    { "src": "/api/ws", "dest": "api/ws.js" },
     { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/(login|signup|admin|room/.+)", "dest": "/public/index.html" },
+    { "src": "/room/(.*)", "dest": "/public/room.html" },
     { "src": "/", "dest": "/public/index.html" }
   ]
 }
