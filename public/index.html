@@ -97,7 +97,7 @@
         const data = await res.json();
         if (!data.ok) { alert('Gagal membuat room'); return; }
         const code = data.code;
-        window.location.href = `/room/${code}?name=${encodeURIComponent(name)}&vsbot=${vsbot?'1':'0'}`;
+        window.location.href = `/room.html?code=${encodeURIComponent(code)}&name=${encodeURIComponent(name)}&vsbot=${vsbot?'1':'0'}`;
       });
 
       const joinForm = document.getElementById('joinRoom');
@@ -105,7 +105,7 @@
         e.preventDefault();
         const code = document.getElementById('code').value.trim().toUpperCase();
         const name = localStorage.getItem('username') || 'Guest';
-        window.location.href = `/room/${code}?name=${encodeURIComponent(name)}`;
+        window.location.href = `/room.html?code=${encodeURIComponent(code)}&name=${encodeURIComponent(name)}`;
       });
 
       const guestForm = document.getElementById('guestForm');
@@ -113,7 +113,7 @@
         e.preventDefault();
         const name = document.getElementById('guestName').value.trim();
         const code = document.getElementById('guestRoom').value.trim().toUpperCase();
-        window.location.href = `/room/${code}?name=${encodeURIComponent(name)}`;
+        window.location.href = `/room.html?code=${encodeURIComponent(code)}&name=${encodeURIComponent(name)}`;
       });
     </script>
   </body>
