@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agar.io Rooms</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body class="page">
+    <div class="container">
+      <h1 class="title">Multiplayer Agar.io</h1>
+
+      {% if username %}
+        <div class="card">
+          <div class="row between center">
+            <div>
+              <div>Login sebagai <strong>{{ username }}</strong></div>
+            </div>
+            <a class="btn" href="{{ url_for('logout') }}">Logout</a>
+          </div>
+        </div>
+      {% else %}
+        <div class="row gap">
+          <a class="btn" href="{{ url_for('login') }}">Login</a>
+          <a class="btn" href="{{ url_for('signup') }}">Sign Up</a>
+        </div>
+      {% endif %}
+
+      <div class="grid two">
+        <div class="card">
+          <h2>Buat Room</h2>
+          {% if username %}
+            <form method="post" action="{{ url_for('http_create_room') }}">
+              <button class="btn" type="submit">Buat Room Baru</button>
+              <label style="display:inline-flex;align-items:center;gap:8px;margin-left:12px;">
+                <input type="checkbox" name="vs_bot" /> VS Komputer
+              </label>
+            </form>
+          {% else %}
+            <p>Silakan login untuk membuat room.</p>
+          {% endif %}
+        </div>
+
+        <div class="card">
+          <h2>Masuk Room</h2>
+          <form id="joinForm">
+            <label for="roomCode">Kode Room</label>
+            <input id="roomCode" name="code" placeholder="Contoh: ABC123" maxlength="12" required />
+            <button class="btn" type="submit">Masuk</button>
+          </form>
+        </div>
+      </div>
+
+      {% if not username %}
+      <div class="card">
+        <h2>Main sebagai Tamu</h2>
+        <form id="guestForm">
+          <div class="grid two">
+            <div>
+              <label for="guestName">Nama</label>
+              <input id="guestName" placeholder="Nama kamu" maxlength="16" required />
+            </div>
+            <div>
+              <label for="guestRoom">Kode Room</label>
+              <input id="guestRoom" placeholder="ABC123" maxlength="12" required />
+            </div>
+          </div>
+          <button class="btn" type="submit">Masuk sebagai Tamu</button>
+        </form>
+      </div>
+      {% endif %}
+
+      <div class="card">
+        <h2>Room Aktif (ringkas)</h2>
+        <div class="room-list">
+          {% for code, r in rooms.items() %}
+            <div class="room-item">
+              <div>
+                <div><strong>{{ code }}</strong></div>
+                <div>Owner: {{ r.created_by }} • Pemain: {{ r.players_count or 0 }}{% if r.vs_bot %} + BOT{% endif %}</div>
+              </div>
+              <a class="btn" href="{{ url_for('room', code=code) }}">Join</a>
+            </div>
+          {% else %}
+            <div>Tidak ada room saat ini.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="row gap">
+        <a class="btn" href="{{ url_for('admin_panel') }}">Admin Panel</a>
+      </div>
+    </div>
+
+    <script>
+      const joinForm = document.getElementById('joinForm');
+      if (joinForm) {
+        joinForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const code = document.getElementById('roomCode').value.trim().toUpperCase();
+          if (!code) return;
+          window.location.href = `/room/${code}`;
+        });
+      }
+
+      const guestForm = document.getElementById('guestForm');
+      if (guestForm) {
+        guestForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('guestName').value.trim();
+          const code = document.getElementById('guestRoom').value.trim().toUpperCase();
+          if (!name || !code) return;
+          // Simpan guestName sementara di sessionStorage untuk dipick up di server via query param (akan di-set via login guest endpoint)
+          window.location.href = `/guest_login?name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}`;
+        });
+      }
+    </script>
+  </body>
+  </html>

@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/ws.js", "use": "@vercel/node" },
+    { "src": "api/*.js", "use": "@vercel/node" },
+    { "src": "public/**", "use": "@vercel/static" },
+    { "src": "static/**", "use": "@vercel/static" },
+    { "src": "templates/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/ws", "dest": "/api/ws.js" },
+    { "src": "/static/(.*)", "dest": "/static/$1" },
+    { "src": "/(login|signup|admin|room/.+)", "dest": "/public/index.html" },
+    { "src": "/", "dest": "/public/index.html" }
+  ]
+}
+
+

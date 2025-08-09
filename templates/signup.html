@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body class="page">
+    <div class="container small">
+      <h1 class="title">Sign Up</h1>
+      {% if error %}
+        <div class="alert">{{ error }}</div>
+      {% endif %}
+      <form method="post" class="card">
+        <label>Username</label>
+        <input name="username" required />
+        <label>Password</label>
+        <input name="password" type="password" required />
+        <button class="btn" type="submit">Daftar</button>
+      </form>
+      <div class="row gap">
+        <a class="btn" href="{{ url_for('login') }}">Sudah punya akun?</a>
+        <a class="btn" href="{{ url_for('index') }}">Beranda</a>
+      </div>
+    </div>
+  </body>
+  </html>
+
+

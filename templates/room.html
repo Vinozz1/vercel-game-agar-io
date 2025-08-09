@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Room {{ code }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <style>
+      html, body { height: 100%; margin: 0; }
+      #game { display:block; width:100vw; height:100vh; background:#0b0f1a; }
+      .hud { position:fixed; top:12px; left:12px; right:12px; display:flex; justify-content:space-between; gap:12px; z-index:2; }
+      .hud .pill { background:rgba(255,255,255,0.1); color:#fff; padding:8px 12px; border-radius:999px; font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div class="hud">
+      <div class="pill">Room: <strong>{{ code }}</strong></div>
+      <div class="pill">Player: <strong>{{ username }}</strong></div>
+      <div class="pill"><a href="{{ url_for('index') }}" class="btn">Keluar</a></div>
+    </div>
+    <canvas id="game"></canvas>
+
+    <script>window.INIT = { code: "{{ code }}", username: "{{ username }}" };</script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='room.js') }}"></script>
+  </body>
+  </html>
+
+

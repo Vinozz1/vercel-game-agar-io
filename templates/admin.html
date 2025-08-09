@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body class="page">
+    <div class="container">
+      <h1 class="title">Admin Panel</h1>
+      <div class="row between center card">
+        <div>Halo, <strong>{{ username }}</strong></div>
+        <a class="btn" href="{{ url_for('index') }}">Beranda</a>
+      </div>
+      <div class="card">
+        <h2>Room Aktif</h2>
+        <div class="room-list">
+        {% if rooms %}
+          {% for r in rooms %}
+            <div class="room-item">
+              <div>
+                <div><strong>{{ r.code }}</strong></div>
+                <div>Owner: {{ r.created_by }} • Pemain: {{ r.players_count }}</div>
+              </div>
+              <form method="post" action="{{ url_for('admin_delete_room') }}" onsubmit="return confirm('Hapus room {{ r.code }}?')">
+                <input type="hidden" name="code" value="{{ r.code }}" />
+                <button class="btn danger" type="submit">Hapus</button>
+              </form>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div>Tidak ada room.</div>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
+
+
