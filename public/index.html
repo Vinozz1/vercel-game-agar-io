@@ -38,13 +38,15 @@
       </div>
     </div>
     <script>
-      function randomCode(n=6){const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';let s='';for(let i=0;i<n;i++)s+=a[Math.floor(Math.random()*a.length)];return s;}
       const createForm = document.getElementById('createRoom');
-      createForm.addEventListener('submit',(e)=>{
+      createForm.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const name = document.getElementById('name1').value.trim();
         const vsbot = document.getElementById('vsbot').checked;
-        const code = randomCode();
+        const res = await fetch('/api/create-room', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ username: name, vsBot: vsbot }) });
+        const data = await res.json();
+        if (!data.ok) { alert('Gagal membuat room'); return; }
+        const code = data.code;
         window.location.href = `/room/${code}?name=${encodeURIComponent(name)}&vsbot=${vsbot?'1':'0'}`;
       });
       const joinForm = document.getElementById('joinRoom');

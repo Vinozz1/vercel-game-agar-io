@@ -87,6 +87,7 @@ export default function handler(req) {
     const { type, payload } = msg || {};
     if (type === 'join') {
       const { code, name, vsBot } = payload || {};
+      // Ensure room meta exists from DB path if needed is skipped in edge demo
       const room = getOrCreateRoom(code, name, !!vsBot);
       // capacity check (2 total; if vsBot then max 1 human)
       const humans = [...room.players.values()].filter(p => !p.isBot).length;
